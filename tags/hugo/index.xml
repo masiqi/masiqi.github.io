@@ -2,22 +2,128 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Hugo on 马思奇的博客</title>
-    <link>http://localhost:1313/tags/hugo/</link>
+    <link>http://masiqi.github.io/tags/hugo/</link>
     <description>Recent content in Hugo on 马思奇的博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 26 Mar 2015 00:29:37 +0800</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/hugo/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 26 Mar 2015 13:01:22 +0800</lastBuildDate>
+    <atom:link href="http://masiqi.github.io/tags/hugo/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
-      <title>使用Hugo创建站点之一</title>
-      <link>http://localhost:1313/2015/03/%E4%BD%BF%E7%94%A8hugo%E5%88%9B%E5%BB%BA%E7%AB%99%E7%82%B9%E4%B9%8B%E4%B8%80/</link>
-      <pubDate>Thu, 26 Mar 2015 00:29:37 +0800</pubDate>
+      <title>使用Hugo创建静态网站「一」-- 介绍与安装</title>
+      <link>http://masiqi.github.io/2015/03/create-site-powerby-hugo_1/</link>
+      <pubDate>Thu, 26 Mar 2015 13:01:22 +0800</pubDate>
       
-      <guid>http://localhost:1313/2015/03/%E4%BD%BF%E7%94%A8hugo%E5%88%9B%E5%BB%BA%E7%AB%99%E7%82%B9%E4%B9%8B%E4%B8%80/</guid>
+      <guid>http://masiqi.github.io/2015/03/create-site-powerby-hugo_1/</guid>
       <description>
 
-&lt;h3 id=&#34;test&#34;&gt;test&lt;/h3&gt;
+&lt;h4 id=&#34;目前这个博客就是用hugo生成的-它托管在github-pages上-当然也可以放在任何其他空间或者云存储上&#34;&gt;目前这个博客就是用hugo生成的，它托管在github pages上，当然也可以放在任何其他空间或者云存储上。&lt;/h4&gt;
+
+&lt;h2 id=&#34;什么是hugo&#34;&gt;什么是Hugo&lt;/h2&gt;
+
+&lt;h4 id=&#34;hugo-http-gohugo-io-是一套用于发布静态页面的cms系统-有点类似-movable-type&#34;&gt;&lt;a href=&#34;http://gohugo.io&#34;&gt;hugo&lt;/a&gt;是一套用于发布静态页面的CMS系统，有点类似&lt;strong&gt;Movable Type&lt;/strong&gt;。&lt;/h4&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;为什么是hugo&#34;&gt;为什么是Hugo&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;静态化&lt;/p&gt;
+
+&lt;h4 id=&#34;和wordpress不同-hugo不需要你的空间或主机支持动态脚本程序-比如php或者python-因为它会将你所有的文章生成成一个静态的网站-这样只要你能找到一个互联网上能访问到的提供内容存储服务的服务商比如阿里云oss-七牛云存储-又拍云等等之类的就可以拥有一个属于自己的博客或者网站&#34;&gt;和wordpress不同，hugo不需要你的空间或主机支持动态脚本程序，比如PHP或者Python，因为它会将你所有的文章生成成一个静态的网站，这样只要你能找到一个互联网上能访问到的提供内容存储服务的服务商比如阿里云oss、七牛云存储、又拍云等等之类的就可以拥有一个属于自己的博客或者网站。&lt;/h4&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;速度快&lt;/p&gt;
+
+&lt;h4 id=&#34;速度快主要体现在两点&#34;&gt;速度快主要体现在两点&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;整站生成速度快: 之前用过mt，build文章简直是悲剧，跑几十分钟生成整站文章是很正常的事情，而使用hugo一个几百篇文章的网站生成只需要不到1秒。&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;网站访问速度快: 因为整站是静态的，所以不需要有动态脚本的执行，不需要访问数据库，速度基本上取决于带宽。&lt;br /&gt;&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Golang开发&lt;/p&gt;
+
+&lt;h4 id=&#34;使用go开发对于用户来说能带来两个明显的好处&#34;&gt;使用go开发对于用户来说能带来两个明显的好处&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;只需要一个文件就可以在自己的电脑上运行了，并且垮平台，不管你是Linux、osx还是Windows都可以使用。&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;go的模板很简单，学习成本低。&lt;br /&gt;&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;各种插件&lt;/p&gt;
+
+&lt;h4 id=&#34;插件挺丰富-统计可以用google-analytics-评论可以用官方支持的disqus-不过我换成了多说-可能国内用多说的人更多一些吧&#34;&gt;插件挺丰富，统计可以用google analytics，评论可以用官方支持的DISQUS，不过我换成了多说，可能国内用多说的人更多一些吧。&lt;/h4&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;安装hugo到你的电脑上&#34;&gt;安装Hugo到你的电脑上&lt;/h2&gt;
+
+&lt;p&gt;我用osx，按照官方的说法你只需要执行下面的命令就好了&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;brew install hugo
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;不过我之前已经装了go的开发环境所以我用&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;go get github.com/spf13/hugo
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;安装完毕之后你可以执行&lt;code&gt;hugo help&lt;/code&gt;可以看到命令列表&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;hugo help
+
+A Fast and Flexible Static Site Generator built with
+love by spf13 and friends in Go.
+
+Complete documentation is available at http://gohugo.io
+
+Usage: 
+  hugo [flags]
+  hugo [command]
+
+Available Commands: 
+  server      Hugo runs its own webserver to render the files
+  version     Print the version number of Hugo
+  config      Print the site configuration
+  check       Check content in the source directory
+  benchmark   Benchmark hugo by building a site a number of times
+  new         Create new content for your site
+  help        Help about any command
+
+Flags:
+  -b, --baseUrl=&amp;quot;&amp;quot;: hostname (and path) to the root eg. http://spf13.com/
+  -D, --buildDrafts=false: include content marked as draft
+  -F, --buildFuture=false: include content with datePublished in the future
+  --cacheDir=&amp;quot;&amp;quot;: filesystem path to cache directory. Defaults: $TMPDIR/hugo_cache/
+  --config=&amp;quot;&amp;quot;: config file (default is path/config.yaml|json|toml)
+  -d, --destination=&amp;quot;&amp;quot;: filesystem path to write files to
+  --disableRSS=false: Do not build RSS files
+  --disableSitemap=false: Do not build Sitemap file
+  --editor=&amp;quot;&amp;quot;: edit new content with this editor, if provided
+  -h, --help=false: help for hugo
+  --ignoreCache=false: Ignores the cache directory for reading but still writes to it
+  --log=false: Enable Logging
+  --logFile=&amp;quot;&amp;quot;: Log File path (if set, logging enabled automatically)
+  --noTimes=false: Don&#39;t sync modification time of files
+  --pluralizeListTitles=true: Pluralize titles in lists using inflect
+  -s, --source=&amp;quot;&amp;quot;: filesystem path to read files relative from
+  --stepAnalysis=false: display memory and timing of different steps of the program
+  -t, --theme=&amp;quot;&amp;quot;: theme to use (located in /themes/THEMENAME/)
+  --uglyUrls=false: if true, use /filename.html instead of /filename/
+  -v, --verbose=false: verbose output
+  --verboseLog=false: verbose logging
+  -w, --watch=false: watch filesystem for changes and recreate as needed
+
+
+Use &amp;quot;hugo help [command]&amp;quot; for more information about a command.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;至此hugo就算安装完毕了。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;至于如何更好的使用hugo我也在研究，计划会有一个系列的文章慢慢更新。&lt;/p&gt;
 </description>
     </item>
     

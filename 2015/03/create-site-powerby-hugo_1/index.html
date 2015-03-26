@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+    <head>
+        
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+
+        <title>使用Hugo创建静态网站「一」-- 介绍与安装 &middot; 马思奇的博客</title>
+        <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600' type='text/css'>
+        <link rel="stylesheet" href="http://masiqi.github.io//libraries/normalize.3.0.1.css" />
+        <link rel="stylesheet" href="http://masiqi.github.io//css/liquorice.css" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon-144-precomposed.png" sizes="144x144" />
+        <link rel="alternate" href="" type="application/rss+xml" title="马思奇的博客" />
+    </head>
+    <body class="li-body">
+
+<header class="li-page-header">
+    <div class="container">
+        <div class="row">
+            <div class="sixteen columns">
+                <div class="li-brand li-left">
+                <a href="http://masiqi.github.io/">马思奇的博客</a></div>
+                <div class="li-menu li-right">
+                    <span class="li-menu-icon" onclick="javascript:toggle('menu');">&#9776;</span>
+                    <ul id="menu2" class="li-menu-items">
+                        
+                            <li><a href="/about/"> 关于我 </a></li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="sixteen columns">
+                <ul id="menu" class="li-menu-items li-menu-mobile">
+                    
+                        <li><a href="/about/"> 关于我 </a></li>
+                    
+                </ul>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+
+
+
+    <div class="container">
+        <div class="row">
+            <div class="sixteen columns">
+                <article class="li-article">
+                    <header class="li-article-header">
+                        <h1 class="li-article-title">使用Hugo创建静态网站「一」-- 介绍与安装</h1>
+                        <span class="li-article-taxonomies">
+                            
+                                Posted in
+                                
+                                    <a href="http://masiqi.github.io//categories/%E6%8A%80%E6%9C%AF">技术</a>
+                                
+                            
+
+                            
+                                with tags
+                                
+                                    <a href="http://masiqi.github.io//tags/hugo">hugo</a>
+                                
+                                    <a href="http://masiqi.github.io//tags/blog">blog</a>
+                                
+                            
+
+                            
+                                
+                                    <a href="http://masiqi.github.io//series/hugo%E5%BB%BA%E7%AB%99">hugo建站</a>
+                                
+                                系列
+                            
+                        </span>
+                         - 
+                        <time class="li-article-date">Thursday, March 26, 2015</time>
+                    </header>
+                    <section>
+                        
+
+<h4 id="目前这个博客就是用hugo生成的-它托管在github-pages上-当然也可以放在任何其他空间或者云存储上">目前这个博客就是用hugo生成的，它托管在github pages上，当然也可以放在任何其他空间或者云存储上。</h4>
+
+<h2 id="什么是hugo">什么是Hugo</h2>
+
+<h4 id="hugo-http-gohugo-io-是一套用于发布静态页面的cms系统-有点类似-movable-type"><a href="http://gohugo.io">hugo</a>是一套用于发布静态页面的CMS系统，有点类似<strong>Movable Type</strong>。</h4>
+
+<hr />
+
+<h2 id="为什么是hugo">为什么是Hugo</h2>
+
+<ol>
+<li><p>静态化</p>
+
+<h4 id="和wordpress不同-hugo不需要你的空间或主机支持动态脚本程序-比如php或者python-因为它会将你所有的文章生成成一个静态的网站-这样只要你能找到一个互联网上能访问到的提供内容存储服务的服务商比如阿里云oss-七牛云存储-又拍云等等之类的就可以拥有一个属于自己的博客或者网站">和wordpress不同，hugo不需要你的空间或主机支持动态脚本程序，比如PHP或者Python，因为它会将你所有的文章生成成一个静态的网站，这样只要你能找到一个互联网上能访问到的提供内容存储服务的服务商比如阿里云oss、七牛云存储、又拍云等等之类的就可以拥有一个属于自己的博客或者网站。</h4></li>
+
+<li><p>速度快</p>
+
+<h4 id="速度快主要体现在两点">速度快主要体现在两点</h4>
+
+<ol>
+<li>整站生成速度快: 之前用过mt，build文章简直是悲剧，跑几十分钟生成整站文章是很正常的事情，而使用hugo一个几百篇文章的网站生成只需要不到1秒。<br /></li>
+<li>网站访问速度快: 因为整站是静态的，所以不需要有动态脚本的执行，不需要访问数据库，速度基本上取决于带宽。<br /></li>
+</ol></li>
+
+<li><p>Golang开发</p>
+
+<h4 id="使用go开发对于用户来说能带来两个明显的好处">使用go开发对于用户来说能带来两个明显的好处</h4>
+
+<ol>
+<li>只需要一个文件就可以在自己的电脑上运行了，并且垮平台，不管你是Linux、osx还是Windows都可以使用。<br /></li>
+<li>go的模板很简单，学习成本低。<br /></li>
+</ol></li>
+
+<li><p>各种插件</p>
+
+<h4 id="插件挺丰富-统计可以用google-analytics-评论可以用官方支持的disqus-不过我换成了多说-可能国内用多说的人更多一些吧">插件挺丰富，统计可以用google analytics，评论可以用官方支持的DISQUS，不过我换成了多说，可能国内用多说的人更多一些吧。</h4></li>
+</ol>
+
+<hr />
+
+<h2 id="安装hugo到你的电脑上">安装Hugo到你的电脑上</h2>
+
+<p>我用osx，按照官方的说法你只需要执行下面的命令就好了</p>
+
+<pre><code>brew install hugo
+</code></pre>
+
+<p>不过我之前已经装了go的开发环境所以我用</p>
+
+<pre><code>go get github.com/spf13/hugo
+</code></pre>
+
+<p>安装完毕之后你可以执行<code>hugo help</code>可以看到命令列表</p>
+
+<pre><code>hugo help
+
+A Fast and Flexible Static Site Generator built with
+love by spf13 and friends in Go.
+
+Complete documentation is available at http://gohugo.io
+
+Usage: 
+  hugo [flags]
+  hugo [command]
+
+Available Commands: 
+  server      Hugo runs its own webserver to render the files
+  version     Print the version number of Hugo
+  config      Print the site configuration
+  check       Check content in the source directory
+  benchmark   Benchmark hugo by building a site a number of times
+  new         Create new content for your site
+  help        Help about any command
+
+Flags:
+  -b, --baseUrl=&quot;&quot;: hostname (and path) to the root eg. http://spf13.com/
+  -D, --buildDrafts=false: include content marked as draft
+  -F, --buildFuture=false: include content with datePublished in the future
+  --cacheDir=&quot;&quot;: filesystem path to cache directory. Defaults: $TMPDIR/hugo_cache/
+  --config=&quot;&quot;: config file (default is path/config.yaml|json|toml)
+  -d, --destination=&quot;&quot;: filesystem path to write files to
+  --disableRSS=false: Do not build RSS files
+  --disableSitemap=false: Do not build Sitemap file
+  --editor=&quot;&quot;: edit new content with this editor, if provided
+  -h, --help=false: help for hugo
+  --ignoreCache=false: Ignores the cache directory for reading but still writes to it
+  --log=false: Enable Logging
+  --logFile=&quot;&quot;: Log File path (if set, logging enabled automatically)
+  --noTimes=false: Don't sync modification time of files
+  --pluralizeListTitles=true: Pluralize titles in lists using inflect
+  -s, --source=&quot;&quot;: filesystem path to read files relative from
+  --stepAnalysis=false: display memory and timing of different steps of the program
+  -t, --theme=&quot;&quot;: theme to use (located in /themes/THEMENAME/)
+  --uglyUrls=false: if true, use /filename.html instead of /filename/
+  -v, --verbose=false: verbose output
+  --verboseLog=false: verbose logging
+  -w, --watch=false: watch filesystem for changes and recreate as needed
+
+
+Use &quot;hugo help [command]&quot; for more information about a command.
+</code></pre>
+
+<p>至此hugo就算安装完毕了。</p>
+
+<hr />
+
+<p>至于如何更好的使用hugo我也在研究，计划会有一个系列的文章慢慢更新。</p>
+
+                    </section>
+                </article>
+            </div>
+        </div>
+
+        <div class="row li-author">
+    <div class="sixteen columns">
+        Written by <strong>Ma siqi</strong>
+    </div>
+</div>
+
+        
+<div class="ds-thread" data-thread-key="post/create-site-powerby-hugo_1.md" data-title="使用Hugo创建静态网站「一」-- 介绍与安装" data-url="http://masiqi.github.io/2015/03/create-site-powerby-hugo_1/"></div>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"masiqi"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+
+
+
+        <div class="row li-pagination">
+            <div class="eight columns">
+                <div class="li-pagination-previous">
+                    
+                        &nbsp;
+                    
+                </div>
+            </div>
+            <div class="eight columns">
+                <div class="li-pagination-next">
+                    
+                        Older article<br />
+                        <a href="http://masiqi.github.io/2015/03/hello-world/"> Hello world!</a>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+<footer class="li-page-footer">
+    <div class="container">
+        <div class="row">
+            <div class="sixteen columns">
+                <div class="li-page-footer-legal">
+                    &copy; 2015. All rights reserved. 
+                </div>
+                <div class="li-page-footer-theme">
+                    <span class=""><a href="https://github.com/eliasson/liquorice/">liquorice</a> is a theme for <a href="http://hugo.spf13.com">hugo</a></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+    <script type="text/javascript">
+    <!--
+    function toggle(id) {
+        var e = document.getElementById(id);
+        e.style.display == 'block' ? e.style.display = 'none' : e.style.display = 'block';
+    }
+    
+    </script>
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-61199866-1', 'auto');
+        ga('send', 'pageview');
+
+    </script>
+    </body>
+</html>
+
