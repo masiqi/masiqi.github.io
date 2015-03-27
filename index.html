@@ -52,6 +52,22 @@
                         <div class="li-article">
                             <article>
     <header>
+        <h2><a href="http://masiqi.github.io/2015/03/create-site-powerby-hugo_2/">使用Hugo创建静态网站「二」-- 使用于部署 </a></h2>
+        <time class="li-article-date">Friday, March 27, 2015</time>
+    </header>
+    <section class="li-article-section">
+        使用Hugo 可以按照官方的方法来，首先创建一个站点 hugo new site xxx 然后找一套自己喜欢的主题，我用的是liquorice，喜欢它是因为它非常简洁。 git clone git@github.com:spf13/hugoThemes.git themes 接下来就可以写文章了 hugo new post/helloworld.md 写好以后可以用 hugo -t liquorice 去生成静态页 还有一种简单一些的方法，可以直接从我的repository中找到已经配置好的样本 git clone git@github.com:masiqi/hugo.git 这个项目我会进行一些小的更新，让它变得更加好用 部署至github pages 如果是从我的库里获得的，可以直接执行以下命令完成发布到github pages的工作 ./deploy.sh 如果不是，也不要紧，用下面的代码创建一个deploy.sh然后执行就好了 #!/bin/bash echo -e &quot;\033[0;32mDeploying updates to GitHub...\033[0m&quot; # Build the project. rm -rf public/* hugo -t liquorice # if using a theme, replace by `hugo -t &lt;yourtheme&gt;` # Go To Public folder cd public # Add changes to git. git add -A # Commit changes.
+    </section>
+    <footer>
+        <a href='http://masiqi.github.io/2015/03/create-site-powerby-hugo_2/'>More</a>
+    </footer>
+</article>
+
+                        </div>
+                    
+                        <div class="li-article">
+                            <article>
+    <header>
         <h2><a href="http://masiqi.github.io/2015/03/create-site-powerby-hugo_1/">使用Hugo创建静态网站「一」-- 介绍与安装 </a></h2>
         <time class="li-article-date">Thursday, March 26, 2015</time>
     </header>

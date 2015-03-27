@@ -6,8 +6,85 @@
     <description>Recent content in Hugo建站 on 马思奇的博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 26 Mar 2015 13:01:22 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 27 Mar 2015 12:53:55 +0800</lastBuildDate>
     <atom:link href="http://masiqi.github.io/series/hugo%E5%BB%BA%E7%AB%99/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>使用Hugo创建静态网站「二」-- 使用于部署</title>
+      <link>http://masiqi.github.io/2015/03/create-site-powerby-hugo_2/</link>
+      <pubDate>Fri, 27 Mar 2015 12:53:55 +0800</pubDate>
+      
+      <guid>http://masiqi.github.io/2015/03/create-site-powerby-hugo_2/</guid>
+      <description>
+
+&lt;h2 id=&#34;使用hugo&#34;&gt;使用Hugo&lt;/h2&gt;
+
+&lt;h4 id=&#34;可以按照官方的方法来-首先创建一个站点&#34;&gt;可以按照官方的方法来，首先创建一个站点&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;hugo new site xxx
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;然后找一套自己喜欢的主题-我用的是liquorice-喜欢它是因为它非常简洁&#34;&gt;然后找一套自己喜欢的主题，我用的是liquorice，喜欢它是因为它非常简洁。&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;git clone git@github.com:spf13/hugoThemes.git themes
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;接下来就可以写文章了&#34;&gt;接下来就可以写文章了&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;hugo new post/helloworld.md
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;写好以后可以用&#34;&gt;写好以后可以用&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;hugo -t liquorice
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;去生成静态页&#34;&gt;去生成静态页&lt;/h4&gt;
+
+&lt;h4 id=&#34;还有一种简单一些的方法-可以直接从我的repository中找到已经配置好的样本&#34;&gt;还有一种简单一些的方法，可以直接从我的repository中找到已经配置好的样本&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;git clone git@github.com:masiqi/hugo.git
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;这个项目我会进行一些小的更新-让它变得更加好用&#34;&gt;这个项目我会进行一些小的更新，让它变得更加好用&lt;/h4&gt;
+
+&lt;h2 id=&#34;部署至github-pages&#34;&gt;部署至github pages&lt;/h2&gt;
+
+&lt;h4 id=&#34;如果是从我的库里获得的-可以直接执行以下命令完成发布到github-pages的工作&#34;&gt;如果是从我的库里获得的，可以直接执行以下命令完成发布到github pages的工作&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;./deploy.sh 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;如果不是-也不要紧-用下面的代码创建一个deploy-sh然后执行就好了&#34;&gt;如果不是，也不要紧，用下面的代码创建一个deploy.sh然后执行就好了&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;#!/bin/bash
+
+echo -e &amp;quot;\033[0;32mDeploying updates to GitHub...\033[0m&amp;quot;
+
+# Build the project. 
+rm -rf public/*
+hugo -t liquorice # if using a theme, replace by `hugo -t &amp;lt;yourtheme&amp;gt;`
+
+# Go To Public folder
+cd public
+# Add changes to git.
+git add -A
+
+# Commit changes.
+msg=&amp;quot;rebuilding site `date`&amp;quot;
+if [ $# -eq 1 ]
+        then msg=&amp;quot;$1&amp;quot;
+        fi
+        git commit -m &amp;quot;$msg&amp;quot;
+
+# Push source and build repos.
+git push origin master
+
+# Come Back
+cd ..
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
     
     <item>
       <title>使用Hugo创建静态网站「一」-- 介绍与安装</title>
