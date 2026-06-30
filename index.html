@@ -4,361 +4,186 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="alternate" type="application/rss+xml" title="AI 资讯日报 RSS" href="https://masiqi.github.io/ai-digest/feed.xml">
-<title>📡 AI 资讯日报</title>
+<link rel="alternate" type="application/rss+xml" title="股票社区声音日报 RSS" href="https://masiqi.github.io/stock-monitor/feed.xml">
+<title>小赫日报中心</title>
 <style>
-  :root { --bg: #0d1117; --card: #161b22; --border: #30363d; --text: #e6edf3; --text2: #8b949e; --accent: #58a6ff; --accent2: #f78166; --green: #3fb950; --purple: #bc8cff; --yellow: #d29922; }
-  @media (prefers-color-scheme: light) {
-    :root { --bg: #f6f8fa; --card: #ffffff; --border: #d0d7de; --text: #1f2328; --text2: #656d76; --accent: #0969da; --accent2: #cf222e; --green: #1a7f37; --purple: #8250df; --yellow: #9a6700; }
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); font-size: 16px; line-height: 1.7; max-width: 680px; margin: 0 auto; padding: 40px 16px 60px; }
+  :root { --bg:#0d1117; --card:#161b22; --border:#30363d; --text:#e6edf3; --text2:#8b949e; --accent:#58a6ff; --stock:#3fb950; --ai:#bc8cff; --warn:#d29922; }
+  @media (prefers-color-scheme: light) { :root { --bg:#f6f8fa; --card:#ffffff; --border:#d0d7de; --text:#1f2328; --text2:#656d76; --accent:#0969da; --stock:#1a7f37; --ai:#8250df; --warn:#9a6700; } }
+  * { box-sizing: border-box; }
+  body { margin:0 auto; max-width:980px; padding:28px 16px 64px; background:var(--bg); color:var(--text); font:17px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif; }
   a { color: var(--accent); text-decoration: none; }
   a:hover { text-decoration: underline; }
-  .hero { text-align: center; padding: 60px 0 40px; border-bottom: 1px solid var(--border); margin-bottom: 40px; }
-  .hero .emoji { font-size: 48px; margin-bottom: 16px; }
-  .hero h1 { font-size: 34px; font-weight: 700; margin-bottom: 8px; }
-  .hero .desc { font-size: 17px; color: var(--text2); margin-bottom: 16px; }
-  .hero .meta { display: flex; justify-content: center; gap: 20px; font-size: 14px; color: var(--text2); }
-  .hero .meta a { color: var(--accent); }
-  .day-list { list-style: none; }
-  .day-list li { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-bottom: 12px; transition: border-color 0.2s, box-shadow 0.2s; }
-  .day-list li:hover { border-color: var(--accent); box-shadow: 0 2px 12px rgba(88,166,255,0.1); }
-  .day-list .day-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-  .day-list .day-date { font-size: 20px; font-weight: 700; }
-  .day-list .day-badge { font-size: 12px; padding: 3px 10px; border-radius: 20px; background: rgba(88,166,255,0.1); color: var(--accent); font-weight: 600; }
-  .day-list .day-link { font-size: 17px; font-weight: 600; color: var(--accent); }
-  .day-list .day-link:hover { text-decoration: none; }
-  .day-list .day-thesis { font-size: 15px; color: var(--text2); margin-top: 6px; line-height: 1.6; }
-  .day-list .day-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-  .day-list .tag { font-size: 12px; padding: 2px 8px; border-radius: 12px; background: rgba(188,140,255,0.1); color: var(--purple); border: 1px solid rgba(188,140,255,0.15); }
-  @media (prefers-color-scheme: light) {
-    .day-list li:hover { box-shadow: 0 2px 12px rgba(9,105,218,0.08); }
-    .day-list .day-badge { background: rgba(9,105,218,0.06); }
-    .day-list .tag { background: rgba(130,80,223,0.06); border-color: rgba(130,80,223,0.15); }
-  }
-  .footer { margin-top: 60px; padding-top: 20px; border-top: 1px solid var(--border); text-align: center; font-size: 13px; color: var(--text2); }
-  .footer a { color: var(--accent); }
+  .hero { padding:34px 0 26px; border-bottom:1px solid var(--border); margin-bottom:22px; text-align:center; }
+  .hero h1 { margin:0 0 8px; font-size:36px; line-height:1.2; }
+  .hero p { margin:0; color:var(--text2); }
+  .cards { display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:14px; margin:22px 0; }
+  .card { display:block; background:var(--card); border:1px solid var(--border); border-radius:16px; padding:18px 20px; color:var(--text); }
+  .card:hover { text-decoration:none; border-color:var(--accent); }
+  .card .kicker { font-size:13px; color:var(--text2); margin-bottom:4px; }
+  .card .title { font-size:22px; font-weight:800; margin-bottom:6px; }
+  .card .desc { color:var(--text2); font-size:15px; }
+  .tabs { display:flex; gap:10px; margin:24px 0 14px; flex-wrap:wrap; }
+  .tab { border:1px solid var(--border); background:var(--card); color:var(--text); border-radius:999px; padding:9px 15px; cursor:pointer; font:inherit; font-weight:700; }
+  .tab[aria-selected="true"] { border-color:var(--accent); box-shadow:0 0 0 3px rgba(88,166,255,.12); }
+  .toolbar { display:flex; justify-content:space-between; align-items:center; gap:12px; margin:8px 0 14px; color:var(--text2); font-size:14px; }
+  .feed-link { font-size:14px; }
+  .list { list-style:none; padding:0; margin:0; display:grid; gap:10px; }
+  .item { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:15px 17px; }
+  .item:hover { border-color:var(--accent); }
+  .item-title { display:block; color:var(--text); font-weight:800; font-size:18px; line-height:1.45; }
+  .item-title:hover { color:var(--accent); text-decoration:none; }
+  .item-meta { color:var(--text2); font-size:13px; margin-top:5px; }
+  .item-desc { color:var(--text2); margin-top:8px; font-size:14px; line-height:1.6; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+  .pager { display:flex; align-items:center; justify-content:center; gap:10px; margin:22px 0 0; }
+  .pager button { border:1px solid var(--border); background:var(--card); color:var(--text); border-radius:9px; padding:8px 12px; cursor:pointer; font:inherit; }
+  .pager button:disabled { opacity:.45; cursor:not-allowed; }
+  .status { color:var(--text2); text-align:center; padding:24px; border:1px dashed var(--border); border-radius:14px; }
+  .footer { margin-top:42px; padding-top:18px; border-top:1px solid var(--border); text-align:center; color:var(--text2); font-size:13px; }
+  @media (max-width:700px) { body { font-size:16px; } .hero h1{font-size:31px;} .cards { grid-template-columns:1fr; } .toolbar{align-items:flex-start; flex-direction:column;} }
 </style>
 </head>
 <body>
+  <header class="hero">
+    <h1>小赫日报中心</h1>
+    <p>AI 资讯日报与持仓股票社区声音日报。两个栏目独立发布，互不覆盖。</p>
+  </header>
 
-<div class="hero">
-  <div class="emoji">📡</div>
-  <h1>AI 资讯日报</h1>
-  <p class="desc">每日深度解析 AI 圈动态，从技术本质到商业影响</p>
-  <div class="meta">
-    <span>数据来源：<a href="https://x.com/i/lists/2029123995598258668" target="_blank">X List</a></span>
-    <span>·</span>
-    <span><a href="https://github.com/masiqi/ai-digest" target="_blank">GitHub</a></span>
-    <span>·</span>
-    <span>由小赫自动生成</span>
+  <section class="cards" aria-label="栏目入口">
+    <a class="card" href="https://masiqi.github.io/ai-digest/">
+      <div class="kicker">AI Digest</div>
+      <div class="title">📡 AI 日报</div>
+      <div class="desc">工具、开源项目、模型动态与行业解读。</div>
+    </a>
+    <a class="card" href="https://masiqi.github.io/stock-monitor/">
+      <div class="kicker">Stock Monitor</div>
+      <div class="title">📈 股票日报</div>
+      <div class="desc">持仓相关资讯与社区声音，区分事实、观点和噪音。</div>
+    </a>
+  </section>
+
+  <nav class="tabs" aria-label="日报栏目">
+    <button class="tab" data-feed="ai" aria-selected="true">📡 AI 日报</button>
+    <button class="tab" data-feed="stock" aria-selected="false">📈 股票日报</button>
+  </nav>
+
+  <div class="toolbar">
+    <div id="feed-title">正在加载 AI 日报…</div>
+    <a id="feed-home" class="feed-link" href="https://masiqi.github.io/ai-digest/">进入栏目首页 →</a>
   </div>
-</div>
+  <div id="content" class="status">加载中…</div>
+  <div id="pager" class="pager" hidden>
+    <button id="prev">上一页</button>
+    <span id="page-info"></span>
+    <button id="next">下一页</button>
+  </div>
 
-<ul class="day-list">
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-06-30.html">📡 2026/06/30 AI 资讯日报</a>
-      <span class="day-badge">7 个话题</span>
-    </div>
-    <div class="day-thesis">🔥 今天最值得上手的方向有两个：一是“把现有 AI agent 变成更能落地的工作流工具”，包括云端 agent 编排、移动端远程操控、长任务 harness，以及把视频/PPT 直接变成可交付内容；二是文档与知识表达工具明显在升温，既有面向 Agent 的排版系统，也有更轻量的在线演示分享站。</div>
-    <div class="day-tags">
-      <span class="tag">Google agents-cli</span>
-      <span class="tag">Kami</span>
-      <span class="tag">视频转步骤文档生成器（video-to-</span>
-      <span class="tag">乔木 PPT 共享站</span>
-      <span class="tag">Cursor for iOS</span>
-      <span class="tag">Meta Brain2Qwerty</span>
-      <span class="tag">Zenith</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-06-29.html">📡 2026/06/29 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-06-28.html">📡 2026/06/28 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-06-27.html">📡 2026/06/27 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-06-26.html">📡 2026/06/26 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-06-25.html">📡 2026/06/25 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-06-24.html">📡 2026/06/24 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-06-23.html">📡 2026/06/23 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-06-22.html">📡 2026/06/22 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-06-21.html">📡 2026/06/21 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-06-20.html">📡 2026/06/20 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-06-19.html">📡 2026/06/19 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-06-18.html">📡 2026/06/18 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-06-17.html">📡 2026/06/17 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-06-16.html">📡 2026/06/16 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-06-15.html">📡 2026/06/15 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-06-14.html">📡 2026/06/14 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-06-13.html">📡 2026/06/13 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-06-12.html">📡 2026/06/12 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-06-11.html">📡 2026/06/11 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-06-10.html">📡 2026/06/10 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-06-09.html">📡 2026/06/09 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-06-08.html">📡 2026/06/08 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-06-07.html">📡 2026/06/07 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-06-06.html">📡 2026/06/06 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-06-05.html">📡 2026/06/05 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-06-04.html">📡 2026/06/04 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-06-03.html">📡 2026/06/03 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-06-02.html">📡 2026/06/02 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-06-01.html">📡 2026/06/01 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-05-31.html">📡 2026/05/31 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-05-30.html">📡 2026/05/30 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-05-29.html">📡 2026/05/29 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-05-28.html">📡 2026/05/28 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-05-27.html">📡 2026/05/27 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-05-26.html">📡 2026/05/26 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-05-25.html">📡 2026/05/25 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-05-23.html">📡 2026/05/23 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-05-22.html">📡 2026/05/22 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-05-21.html">📡 2026/05/21 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-05-20.html">📡 2026/05/20 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-05-19.html">📡 2026/05/19 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-05-18.html">📡 2026/05/18 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-05-17.html">📡 2026/05/17 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-05-16.html">📡 2026/05/16 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-05-14.html">📡 2026/05/14 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-05-13.html">📡 2026/05/13 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-  <li>
-    <div class="day-header">
-      <a class="day-link" href="https://masiqi.github.io/ai-digest/daily/2026-05-12.html">📡 2026/05/12 AI 资讯日报</a>
-      <span class="day-badge">查看详情 →</span>
-    </div>
-  </li>
-</ul>
+  <footer class="footer">Powered by GitHub Pages · AI 与股票栏目由各自 agent 独立更新</footer>
 
-<div class="footer">
-  Powered by GitHub Pages · <a href="https://github.com/masiqi/ai-digest">Source</a>
-</div>
+<script>
+const PAGE_SIZE = 10;
+const feeds = {
+  ai: {
+    label: '📡 AI 日报',
+    home: 'https://masiqi.github.io/ai-digest/',
+    feed: 'https://masiqi.github.io/ai-digest/feed.xml',
+    fallback: [
+      { title: '📡 AI 日报栏目首页', link: 'https://masiqi.github.io/ai-digest/', pubDate: '', description: '进入 AI 日报历史列表。' }
+    ]
+  },
+  stock: {
+    label: '📈 股票日报',
+    home: 'https://masiqi.github.io/stock-monitor/',
+    feed: 'https://masiqi.github.io/stock-monitor/feed.xml',
+    fallback: [
+      { title: '📈 股票日报栏目首页', link: 'https://masiqi.github.io/stock-monitor/', pubDate: '', description: '进入股票日报历史列表。' },
+      { title: '📈 2026-06-30 每日持仓股票社区声音监控', link: 'https://masiqi.github.io/stock-monitor/daily/2026-06-30.html', pubDate: '2026-06-30', description: '今日持仓股票社区声音日报。' }
+    ]
+  }
+};
+let currentFeed = 'ai';
+let currentPage = 1;
+let cache = {};
 
+function text(node, selector) {
+  const el = node.querySelector(selector);
+  return el ? el.textContent.trim() : '';
+}
+function cleanDescription(html) {
+  const div = document.createElement('div');
+  div.innerHTML = html || '';
+  return (div.textContent || '').replace(/\s+/g, ' ').trim();
+}
+function formatDate(value) {
+  if (!value) return '';
+  const d = new Date(value);
+  if (!Number.isNaN(d.getTime())) return d.toISOString().slice(0, 10);
+  const m = String(value).match(/\d{4}-\d{2}-\d{2}/);
+  return m ? m[0] : String(value).slice(0, 20);
+}
+async function loadFeed(key) {
+  if (cache[key]) return cache[key];
+  const cfg = feeds[key];
+  try {
+    const res = await fetch(cfg.feed + '?v=' + Date.now(), { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const xml = new DOMParser().parseFromString(await res.text(), 'application/xml');
+    const items = Array.from(xml.querySelectorAll('item')).map(item => ({
+      title: text(item, 'title'),
+      link: text(item, 'link'),
+      pubDate: text(item, 'pubDate'),
+      description: cleanDescription(text(item, 'description'))
+    })).filter(item => item.title && item.link);
+    cache[key] = items.length ? items : cfg.fallback;
+  } catch (err) {
+    console.warn('feed load failed', key, err);
+    cache[key] = cfg.fallback;
+  }
+  return cache[key];
+}
+function render(items) {
+  const cfg = feeds[currentFeed];
+  document.getElementById('feed-title').textContent = cfg.label + ' · 共 ' + items.length + ' 篇';
+  const home = document.getElementById('feed-home');
+  home.href = cfg.home;
+  home.textContent = '进入' + cfg.label.replace(/^..\s*/, '') + '栏目首页 →';
+
+  const totalPages = Math.max(1, Math.ceil(items.length / PAGE_SIZE));
+  currentPage = Math.min(Math.max(1, currentPage), totalPages);
+  const pageItems = items.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+  const content = document.getElementById('content');
+  if (!pageItems.length) {
+    content.className = 'status';
+    content.textContent = '暂无内容';
+  } else {
+    content.className = '';
+    content.innerHTML = '<ul class="list">' + pageItems.map(item => `
+      <li class="item">
+        <a class="item-title" href="${item.link}" target="_self">${escapeHtml(item.title)}</a>
+        <div class="item-meta">${escapeHtml(formatDate(item.pubDate))}</div>
+        ${item.description ? `<div class="item-desc">${escapeHtml(item.description)}</div>` : ''}
+      </li>`).join('') + '</ul>';
+  }
+  const pager = document.getElementById('pager');
+  pager.hidden = items.length <= PAGE_SIZE;
+  document.getElementById('page-info').textContent = currentPage + ' / ' + totalPages;
+  document.getElementById('prev').disabled = currentPage <= 1;
+  document.getElementById('next').disabled = currentPage >= totalPages;
+}
+function escapeHtml(s) {
+  return String(s || '').replace(/[&<>"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
+}
+async function showFeed(key, page = 1) {
+  currentFeed = key;
+  currentPage = page;
+  document.querySelectorAll('.tab').forEach(btn => btn.setAttribute('aria-selected', String(btn.dataset.feed === key)));
+  document.getElementById('content').className = 'status';
+  document.getElementById('content').textContent = '加载中…';
+  render(await loadFeed(key));
+}
+document.querySelectorAll('.tab').forEach(btn => btn.addEventListener('click', () => showFeed(btn.dataset.feed, 1)));
+document.getElementById('prev').addEventListener('click', async () => { currentPage--; render(await loadFeed(currentFeed)); });
+document.getElementById('next').addEventListener('click', async () => { currentPage++; render(await loadFeed(currentFeed)); });
+showFeed('ai');
+</script>
 </body>
 </html>
