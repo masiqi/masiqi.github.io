@@ -17,6 +17,20 @@
   .hero h1 { margin:0 0 8px; font-size:36px; line-height:1.2; }
   .hero p { margin:0; color:var(--text2); }
   .cards { display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:14px; margin:22px 0; }
+  .quote-panel { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:18px 20px; margin:20px 0 6px; }
+  .quote-head { display:flex; justify-content:space-between; align-items:flex-end; gap:12px; margin-bottom:12px; }
+  .quote-head h2 { margin:0; font-size:21px; }
+  .quote-source { color:var(--text2); font-size:13px; }
+  .quote-grid { display:grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap:10px; }
+  .quote-card { border:1px solid var(--border); border-radius:12px; padding:12px; min-height:104px; }
+  .quote-name { font-weight:800; font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .quote-symbol { color:var(--text2); font-size:12px; margin-top:1px; }
+  .quote-price { font-size:22px; font-weight:900; margin-top:8px; line-height:1.2; }
+  .quote-change { font-size:14px; margin-top:4px; font-weight:800; }
+  .quote-up { color:#f85149; }
+  .quote-down { color:var(--stock); }
+  .quote-flat { color:var(--text2); }
+  .quote-error { color:var(--text2); font-size:14px; }
   .card { display:block; background:var(--card); border:1px solid var(--border); border-radius:16px; padding:18px 20px; color:var(--text); }
   .card:hover { text-decoration:none; border-color:var(--accent); }
   .card .kicker { font-size:13px; color:var(--text2); margin-bottom:4px; }
@@ -39,7 +53,7 @@
   .pager button:disabled { opacity:.45; cursor:not-allowed; }
   .status { color:var(--text2); text-align:center; padding:24px; border:1px dashed var(--border); border-radius:14px; }
   .footer { margin-top:42px; padding-top:18px; border-top:1px solid var(--border); text-align:center; color:var(--text2); font-size:13px; }
-  @media (max-width:700px) { body { font-size:16px; } .hero h1{font-size:31px;} .cards { grid-template-columns:1fr; } .toolbar{align-items:flex-start; flex-direction:column;} }
+  @media (max-width:700px) { body { font-size:16px; } .hero h1{font-size:31px;} .cards { grid-template-columns:1fr; } .quote-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .toolbar{align-items:flex-start; flex-direction:column;} }
 </style>
 </head>
 <body>
@@ -59,6 +73,16 @@
       <div class="title">📈 股票日报</div>
       <div class="desc">持仓相关资讯与社区声音，区分事实、观点和噪音。</div>
     </a>
+  </section>
+
+  <section class="quote-panel" aria-label="实时持仓行情">
+    <div class="quote-head">
+      <h2>📈 实时持仓行情</h2>
+      <div class="quote-source" id="quote-time">数据源：东方财富 · 加载中…</div>
+    </div>
+    <div class="quote-grid" id="quote-grid">
+      <div class="quote-error">正在读取行情…</div>
+    </div>
   </section>
 
   <nav class="tabs" aria-label="日报栏目">
@@ -103,6 +127,12 @@ const feeds = {
 let currentFeed = 'ai';
 let currentPage = 1;
 let cache = {};
+const holdings = [
+  { symbol: 'GOOG', name: 'Alphabet', market: 'us', secid: '105.GOOG', cost: 93.1 },
+  { symbol: '000001', name: '平安银行', market: 'cn', secid: '0.000001', cost: 3.724 },
+  { symbol: '600019', name: '宝钢股份', market: 'cn', secid: '1.600019', cost: 1.587 },
+  { symbol: '601088', name: '中国神华', market: 'cn', secid: '1.601088', cost: -1.368 }
+];
 
 function text(node, selector) {
   const el = node.querySelector(selector);
@@ -184,6 +214,55 @@ document.querySelectorAll('.tab').forEach(btn => btn.addEventListener('click', (
 document.getElementById('prev').addEventListener('click', async () => { currentPage--; render(await loadFeed(currentFeed)); });
 document.getElementById('next').addEventListener('click', async () => { currentPage++; render(await loadFeed(currentFeed)); });
 showFeed('ai');
+loadQuotes();
+setInterval(loadQuotes, 60 * 1000);
+
+async function loadQuotes() {
+  const grid = document.getElementById('quote-grid');
+  const time = document.getElementById('quote-time');
+  try {
+    const cnUrl = 'https://push2.eastmoney.com/api/qt/ulist.np/get?fltt=2&secids=0.000001,1.600019,1.601088&fields=f12,f14,f2,f3,f4,f18';
+    const usUrl = 'https://push2.eastmoney.com/api/qt/stock/get?secid=105.GOOG&fields=f57,f58,f43,f60,f169,f170';
+    const [cnRes, usRes] = await Promise.all([
+      fetch(cnUrl, { cache: 'no-store' }),
+      fetch(usUrl, { cache: 'no-store' })
+    ]);
+    if (!cnRes.ok || !usRes.ok) throw new Error('quote HTTP error');
+    const cn = await cnRes.json();
+    const us = await usRes.json();
+    const rows = [];
+    const usData = us && us.data;
+    if (usData) rows.push({ symbol: 'GOOG', name: 'Alphabet', price: usData.f43 / 1000, pct: usData.f170 / 100, change: usData.f169 / 1000, prev: usData.f60 / 1000, currency: 'USD' });
+    for (const item of ((cn.data && cn.data.diff) || [])) {
+      rows.push({ symbol: item.f12, name: item.f14, price: item.f2, pct: item.f3, change: item.f4, prev: item.f18, currency: 'CNY' });
+    }
+    const bySymbol = Object.fromEntries(rows.map(r => [r.symbol, r]));
+    grid.innerHTML = holdings.map(h => renderQuote(h, bySymbol[h.symbol])).join('');
+    time.textContent = '数据源：东方财富 · ' + new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+  } catch (err) {
+    console.warn('quote load failed', err);
+    grid.innerHTML = '<div class="quote-error">行情暂不可用。东方财富接口可能临时不可访问或被浏览器拦截。</div>';
+    time.textContent = '数据源：东方财富 · 加载失败';
+  }
+}
+function renderQuote(holding, row) {
+  if (!row || row.price == null || row.price === '-') {
+    return `<div class="quote-card"><div class="quote-name">${escapeHtml(holding.name)}</div><div class="quote-symbol">${escapeHtml(holding.symbol)}</div><div class="quote-error">暂无行情</div></div>`;
+  }
+  const pct = Number(row.pct || 0);
+  const cls = pct > 0 ? 'quote-up' : pct < 0 ? 'quote-down' : 'quote-flat';
+  const sign = pct > 0 ? '+' : '';
+  const price = Number(row.price).toFixed(holding.market === 'us' ? 2 : 2);
+  const change = row.change == null ? '' : ` ${sign}${Number(row.change).toFixed(2)}`;
+  const costNote = holding.cost < 0 ? '成本：分红后为负' : `成本：${holding.cost}`;
+  return `<div class="quote-card">
+    <div class="quote-name">${escapeHtml(holding.name)}</div>
+    <div class="quote-symbol">${escapeHtml(holding.symbol)} · ${escapeHtml(row.currency)}</div>
+    <div class="quote-price ${cls}">${price}</div>
+    <div class="quote-change ${cls}">${sign}${pct.toFixed(2)}%${escapeHtml(change)}</div>
+    <div class="quote-symbol">${escapeHtml(costNote)}</div>
+  </div>`;
+}
 </script>
 </body>
 </html>
