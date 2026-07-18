@@ -21,7 +21,7 @@
   .quote-head { display:flex; justify-content:space-between; align-items:flex-end; gap:12px; margin-bottom:12px; }
   .quote-head h2 { margin:0; font-size:21px; }
   .quote-source { color:var(--text2); font-size:13px; }
-  .quote-grid { display:grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap:10px; }
+  .quote-grid { display:grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap:10px; }
   .quote-card { border:1px solid var(--border); border-radius:12px; padding:12px; min-height:104px; }
   .quote-name { font-weight:800; font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .quote-symbol { color:var(--text2); font-size:12px; margin-top:1px; }
@@ -131,7 +131,8 @@ const holdings = [
   { symbol: 'GOOG', name: 'Alphabet', market: 'us', secid: '105.GOOG', cost: 93.1 },
   { symbol: '000001', name: '平安银行', market: 'cn', secid: '0.000001', cost: 3.724 },
   { symbol: '600019', name: '宝钢股份', market: 'cn', secid: '1.600019', cost: 1.587 },
-  { symbol: '601088', name: '中国神华', market: 'cn', secid: '1.601088', cost: -1.368 }
+  { symbol: '601088', name: '中国神华', market: 'cn', secid: '1.601088', cost: -1.368 },
+  { symbol: '00336', name: '华宝国际', market: 'hk', secid: '116.00336', cost: null }
 ];
 
 function text(node, selector) {
@@ -223,18 +224,28 @@ async function loadQuotes() {
   try {
     const cnUrl = 'https://push2.eastmoney.com/api/qt/ulist.np/get?fltt=2&secids=0.000001,1.600019,1.601088&fields=f12,f14,f2,f3,f4,f18';
     const usUrl = 'https://push2.eastmoney.com/api/qt/stock/get?secid=105.GOOG&fields=f57,f58,f43,f60,f169,f170';
-    const [cnRes, usRes] = await Promise.all([
+    const hkUrl = 'https://query1.finance.yahoo.com/v8/finance/chart/0336.HK?range=5d&interval=1d';
+    const [cnRes, usRes, hkRes] = await Promise.allSettled([
       fetch(cnUrl, { cache: 'no-store' }),
-      fetch(usUrl, { cache: 'no-store' })
+      fetch(usUrl, { cache: 'no-store' }),
+      fetch(hkUrl, { cache: 'no-store' })
     ]);
-    if (!cnRes.ok || !usRes.ok) throw new Error('quote HTTP error');
-    const cn = await cnRes.json();
-    const us = await usRes.json();
+    const cn = cnRes.status === 'fulfilled' && cnRes.value.ok ? await cnRes.value.json() : null;
+    const us = usRes.status === 'fulfilled' && usRes.value.ok ? await usRes.value.json() : null;
+    const hk = hkRes.status === 'fulfilled' && hkRes.value.ok ? await hkRes.value.json() : null;
+    if (!cn && !us && !hk) throw new Error('all quote sources unavailable');
     const rows = [];
     const usData = us && us.data;
     if (usData) rows.push({ symbol: 'GOOG', name: 'Alphabet', price: usData.f43 / 1000, pct: usData.f170 / 100, change: usData.f169 / 1000, prev: usData.f60 / 1000, currency: 'USD' });
     for (const item of ((cn.data && cn.data.diff) || [])) {
       rows.push({ symbol: item.f12, name: item.f14, price: item.f2, pct: item.f3, change: item.f4, prev: item.f18, currency: 'CNY' });
+    }
+    const hkChart = hk && hk.chart && hk.chart.result && hk.chart.result[0];
+    if (hkChart) {
+      const closes = (hkChart.indicators.quote[0].close || []).filter(v => v != null);
+      const price = closes[closes.length - 1];
+      const prev = closes.length > 1 ? closes[closes.length - 2] : hkChart.meta.chartPreviousClose;
+      if (price != null && prev != null) rows.push({ symbol: '00336', name: '华宝国际', price, pct: (price - prev) / prev * 100, change: price - prev, prev, currency: 'HKD' });
     }
     const bySymbol = Object.fromEntries(rows.map(r => [r.symbol, r]));
     grid.innerHTML = holdings.map(h => renderQuote(h, bySymbol[h.symbol])).join('');
@@ -254,7 +265,7 @@ function renderQuote(holding, row) {
   const sign = pct > 0 ? '+' : '';
   const price = Number(row.price).toFixed(holding.market === 'us' ? 2 : 2);
   const change = row.change == null ? '' : ` ${sign}${Number(row.change).toFixed(2)}`;
-  const costNote = holding.cost < 0 ? '成本：分红后为负' : `成本：${holding.cost}`;
+  const costNote = holding.cost == null ? '成本：未提供' : holding.cost < 0 ? '成本：分红后为负' : `成本：${holding.cost}`;
   return `<div class="quote-card">
     <div class="quote-name">${escapeHtml(holding.name)}</div>
     <div class="quote-symbol">${escapeHtml(holding.symbol)} · ${escapeHtml(row.currency)}</div>
