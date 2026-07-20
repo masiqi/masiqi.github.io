@@ -222,30 +222,31 @@ async function loadQuotes() {
   const grid = document.getElementById('quote-grid');
   const time = document.getElementById('quote-time');
   try {
-    const cnUrl = 'https://push2.eastmoney.com/api/qt/ulist.np/get?fltt=2&secids=0.000001,1.600019,1.601088&fields=f12,f14,f2,f3,f4,f18';
+    // Eastmoney's batch endpoint supports A-shares and HK shares together and
+    // permits browser CORS. Yahoo's chart endpoint frequently returns 429 to
+    // browser clients, so include Huabao (116.00336) in this stable batch.
+    const cnHkUrl = 'https://push2.eastmoney.com/api/qt/ulist.np/get?fltt=2&secids=0.000001,1.600019,1.601088,116.00336&fields=f12,f14,f2,f3,f4,f18';
     const usUrl = 'https://push2.eastmoney.com/api/qt/stock/get?secid=105.GOOG&fields=f57,f58,f43,f60,f169,f170';
-    const hkUrl = 'https://query1.finance.yahoo.com/v8/finance/chart/0336.HK?range=5d&interval=1d';
-    const [cnRes, usRes, hkRes] = await Promise.allSettled([
-      fetch(cnUrl, { cache: 'no-store' }),
-      fetch(usUrl, { cache: 'no-store' }),
-      fetch(hkUrl, { cache: 'no-store' })
+    const [cnHkRes, usRes] = await Promise.allSettled([
+      fetch(cnHkUrl, { cache: 'no-store' }),
+      fetch(usUrl, { cache: 'no-store' })
     ]);
-    const cn = cnRes.status === 'fulfilled' && cnRes.value.ok ? await cnRes.value.json() : null;
+    const cnHk = cnHkRes.status === 'fulfilled' && cnHkRes.value.ok ? await cnHkRes.value.json() : null;
     const us = usRes.status === 'fulfilled' && usRes.value.ok ? await usRes.value.json() : null;
-    const hk = hkRes.status === 'fulfilled' && hkRes.value.ok ? await hkRes.value.json() : null;
-    if (!cn && !us && !hk) throw new Error('all quote sources unavailable');
+    if (!cnHk && !us) throw new Error('all quote sources unavailable');
     const rows = [];
     const usData = us && us.data;
     if (usData) rows.push({ symbol: 'GOOG', name: 'Alphabet', price: usData.f43 / 1000, pct: usData.f170 / 100, change: usData.f169 / 1000, prev: usData.f60 / 1000, currency: 'USD' });
-    for (const item of ((cn.data && cn.data.diff) || [])) {
-      rows.push({ symbol: item.f12, name: item.f14, price: item.f2, pct: item.f3, change: item.f4, prev: item.f18, currency: 'CNY' });
-    }
-    const hkChart = hk && hk.chart && hk.chart.result && hk.chart.result[0];
-    if (hkChart) {
-      const closes = (hkChart.indicators.quote[0].close || []).filter(v => v != null);
-      const price = closes[closes.length - 1];
-      const prev = closes.length > 1 ? closes[closes.length - 2] : hkChart.meta.chartPreviousClose;
-      if (price != null && prev != null) rows.push({ symbol: '00336', name: '华宝国际', price, pct: (price - prev) / prev * 100, change: price - prev, prev, currency: 'HKD' });
+    for (const item of (((cnHk || {}).data || {}).diff || [])) {
+      rows.push({
+        symbol: item.f12,
+        name: item.f14,
+        price: item.f2,
+        pct: item.f3,
+        change: item.f4,
+        prev: item.f18,
+        currency: item.f12 === '00336' ? 'HKD' : 'CNY'
+      });
     }
     const bySymbol = Object.fromEntries(rows.map(r => [r.symbol, r]));
     grid.innerHTML = holdings.map(h => renderQuote(h, bySymbol[h.symbol])).join('');
